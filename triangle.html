@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="public/css/triangle.css">
+    <meta charset="utf-8">
+    <link rel="icon" type="images/x-icon" href="public/images/triangle-svg-9.png" />
+    <title></title>
+  </head>
+  <body>
+    <h1>playing with triangles</h1>
+    <h1>Press "F" to Make a Triangle <img src="public/images/R.png" alt=""> </h1>
+    <h1>Press "Q" to Make a Square <img src="public/images/172-_box_square__shape_-512.webp" alt=""> </h1>
+    <h1>Press "C" to Make a Circle <img src="public/images/R (1).png" alt=""></h1>
+    <h1>Press "D" to Make a Diamond <img src="public/images/diamond.png" alt=""></h1>
+    <h1>Press "I" to Make a Ink <img src="public/images/empty-circle-stamp-grunge-splash-1-1024x963.png" alt=""></h1>
+    <h1>Press "H" to Make a Halo <img src="public/images/67bc5e1d642580a07a151527119ded06.png" alt=""></h1>
+    <h1>Press "E" to Make a Eye <img src="public/images/Circumpunct1-700x700.png" alt=""></h1>
+    <h1>Press "B" to Make a Butterfly <img src="public/images/butterfly.png" alt=""></h1>
+    <h1>Press "A" to Make a Abstract <img src="public/images/Abstract.png" alt=""></h1>
+
+
+
+    <h2>Press "SPACEBAR" to Rotate</h2>
+    <h2>Press "BACKSPACE" to Delete</h2>
+    <h2>Press "+" and "-" to Reshape</h2>
+
+    <div class="container" id='container'>
+    </div>
+
+  <script>
+    let container = document.getElementById('container');
+    let num=0;
+    var shapeClicked = true;
+    var storage;
+    var x,y;
+    var obj = {70:'tri',81:'square',67:'circle',68:'diamond',73:'ink',72:'halo',69:'eye',66:'butterfly',65:'abstract'}
+
+    container.addEventListener('click',move)
+    window.addEventListener('keydown',key)
+    window.addEventListener('mousemove',()=>{x=window.event.clientX , y=window.event.clientY})
+
+
+    function makeShape(x_pos , y_pos, div) {
+      div.style.height = 100+'px';
+      div.style.width = 100+'px';
+      div.style.position = 'fixed';
+      div.style.left = x_pos+-40+'px';
+      div.style.top = y_pos+-40+'px';
+      return document.getElementById('container').appendChild(div);
+    }
+
+    function move(){
+      if(shapeClicked && event.target.className.split(' ')[0]=='common'){
+        shapeClicked = false;
+        storage = event.target;
+        this.onmousemove = logMouseMove;
+      }
+    else if (!shapeClicked && event.target.className.split(' ')[0]=='common'){
+      shapeClicked = true
+        this.onmousemove = placeDiv(this.x,this.y,event.target);
+    }
+  }
+
+    function logMouseMove(event) {
+      let e = window.event;
+      placeDiv(e.clientX, e.clientY ,storage);
+    }
+
+    function placeDiv(x_pos, y_pos, div) {
+        div.style.left = x_pos+-40+'px';
+        div.style.top = y_pos+-40+'px';
+  }
+
+  function key(e){
+    console.log(e.keyCode);
+    if(shapeClicked && obj[e.keyCode]) {
+      let div = document.createElement("div");
+      div.classList.add('common',obj[e.keyCode]);
+      makeShape(x,y,div);
+  }
+  else if(e.keyCode==8)
+    del()
+
+  else if(!shapeClicked && storage.className.split(' ')[0]=='common'){
+    let size = parseInt(storage.style.height.split('px')[0]);
+    if(e.keyCode==32)
+        rotate();
+
+    else if(e.keyCode==107 && size <=500)
+      size+=50
+
+    else if(e.keyCode==109 && size > 50)
+      size-=50
+
+    reshape(size);
+  }
+}
+
+  function reshape(size){
+    storage.style.height = size+'px';
+    storage.style.width = size+'px';
+  }
+
+  let del=()=>{
+    shapeClicked=true
+    event.preventDefault();
+    storage.remove();
+  }
+
+  let rotate=()=>{
+    event.preventDefault()
+    num+=90;
+    storage.style.transform = `rotate(${num}deg)`
+  }
+  </script>
+  </body>
+</html>
